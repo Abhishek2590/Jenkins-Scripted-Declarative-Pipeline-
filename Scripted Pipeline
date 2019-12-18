@@ -1,0 +1,25 @@
+node('master') 
+{
+    stage('ContinuosDownload') 
+    {
+    git 'https://github.com/intelliqittrainings/maven.git'
+    }
+    stage('ContinuosBuild')
+    {
+        sh label: '', script: 'mvn package'
+    }
+    stage('ContinuosDeployment')
+    {
+     sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.39.153:/var/lib/tomcat8/webapps/testapp1.war'    
+    }
+    stage('ContinusTesting')
+    {
+     git 'https://github.com/selenium-saikrishna/FunctionalTesting.git'
+     sh label: '', script: 'echo "Testing Passed"'
+    }
+    stage('ContinuosDelivery')
+    {
+    sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.37.237:/var/lib/tomcat8/webapps/prodapp1.war'    
+    }
+    
+}

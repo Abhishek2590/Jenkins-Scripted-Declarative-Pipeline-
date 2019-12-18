@@ -1,0 +1,49 @@
+pipeline
+{
+    agent any
+    stages
+ {
+     stage('ContinusDownload')
+ {
+     steps
+     {
+         git 'https://github.com/intelliqittrainings/maven.git'
+     }
+     
+ }   
+ stage('ContinusBuild')
+ {
+     steps
+     {
+         sh label: '', script: 'mvn package'
+     }
+     
+ }
+ stage('ContinusDeployment')
+ {
+     steps
+     {
+         sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline/webapp/target/webapp.war ubuntu@172.31.39.153:/var/lib/tomcat8/webapps/testapp2.war'
+     }
+     
+ }
+ stage('ContinusTesting')
+ {
+     steps
+     {
+         git 'https://github.com/selenium-saikrishna/FunctionalTesting.git'
+         sh label: '', script: 'echo "Testing Passed"'
+     }
+     
+ }
+ stage('ContinusDelivery')
+ {
+     steps
+     {
+         sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline/webapp/target/webapp.war ubuntu@172.31.37.237:/var/lib/tomcat8/webapps/prodapp2.war'    
+     }
+     
+ }
+     
+ }    
+}
